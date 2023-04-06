@@ -1,44 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import options from '../TimeZonesReal/tmz_formatted.json';
 
-dayjs.extend(utc);
-dayjs.extend(timezone);
-
 const defaultTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-const TimezoneConverterDayJS = () => {
-  const [selectedTime, setSelectedTime] = useState(
-    dayjs().tz().format('YYYY-MM-DDThh:mm').toString()
-  );
-  const [currentIdx, setCurrentIdx] = useState<number>(0);
+dayjs.extend(utc);
+dayjs.extend(timezone);
+dayjs.tz.setDefault(defaultTimezone);
 
+const originTimezone = dayjs().format('YYYY-MM-DDTHH:mm');
+console.log('originTimezone', originTimezone);
+
+const TimezoneConverterDayJS = () => {
+  const [selectedTime, setSelectedTime] = useState(dayjs().format('YYYY-MM-DDTHH:mm'));
   const [selectedTimezone, setSelectedTimezone] = useState<string>(
     options.find((option) => option.key === defaultTimezone)?.value ?? 'America/New_York'
   );
 
-  useEffect(() => {
-    // initialize default timezone
-    dayjs.tz.setDefault(defaultTimezone);
-  }, []);
-
   // Handle changes to the selected time
   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedTime(dayjs(event.target.value).tz().format('YYYY-MM-DDThh:mm'));
+    setSelectedTime(event.target.value);
   };
 
   // Handle changes to the selected timezone
-  const handleTimezoneChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleTimezoneChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const currentIdx = event.target.selectedIndex;
-
-    dayjs.tz.setDefault(options[currentIdx].key);
-
     setSelectedTimezone(event.target.value);
-    setSelectedTime(dayjs().tz().format('YYYY-MM-DDThh:mm'));
-    setCurrentIdx(currentIdx);
-  };
+
+    const targetTime = dayjs(originTimezone).tz(options[currentIdx].key).format('YYYY-MM-DDTHH:mm');
+
+    const differenceInHours = dayjs(targetTime).diff(dayjs(originTimezone), 'hour');
+
+    console.log('differenceInHours', differenceInHours);
+
+    const timeObj = dayjs(originTimezone).tz(defaultTimezone);
+    const newTimeObj = timeObj.add(differenceInHours, 'hour');
+
+    setSelectedTime(newTimeObj.format('YYYY-MM-DDTHH:mm'));
+  }, []);
 
   return (
     <div>
@@ -67,3 +68,40 @@ const TimezoneConverterDayJS = () => {
 };
 
 export default TimezoneConverterDayJS;
+
+/**
+ * const curTime = dayjs(dayjs().tz().format('YYYY-MM-DDTHH:mm'));
+
+    console.log('-- curTime', curTime);
+
+    const utcTime = curTime.utc();
+
+    const target = utcTime.tz(options[currentIdx].key);
+
+    console.log('-- target', target);
+
+    const curHour = curTime.hour();
+    const targetHour = target.hour();
+
+    console.log('-- targetHour', targetHour);
+    console.log('-- curHour', curHour);
+
+    // 전날로 바뀌어 버리면 계산을 어떻게 해야할까요?
+    const differencesInHours = () => {
+      if (targetHour > 12) {
+        return curHour - targetHour;
+      } else {
+        return targetHour - curHour;
+      }
+    };
+
+    console.log('-- differencesInHours', differencesInHours());
+
+    const timeObj = dayjs(selectedTime);
+
+    console.log('-- timeObj', timeObj);
+
+    const newTimeObj = timeObj.add(differencesInHours(), 'hour');
+
+    console.log('-- newTimeObj', newTimeObj.format('YYYY-MM-DDThh:mm'));
+ */
