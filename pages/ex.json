@@ -1,0 +1,72 @@
+[
+  {
+    "zoneName": "Asia/Kabul",
+    "gmtOffset": 16200,
+    "gmtOffsetName": "UTC+04:30",
+    "abbreviation": "AFT",
+    "tzName": "Afghanistan Time"
+  },
+  {
+    "zoneName": "Europe/Mariehamn",
+    "gmtOffset": 7200,
+    "gmtOffsetName": "UTC+02:00",
+    "abbreviation": "EET",
+    "tzName": "Eastern European Time"
+  },
+  {
+    "zoneName": "Europe/Tirane",
+    "gmtOffset": 3600,
+    "gmtOffsetName": "UTC+01:00",
+    "abbreviation": "CET",
+    "tzName": "Central European Time"
+  },
+  {
+    "zoneName": "Africa/Algiers",
+    "gmtOffset": 3600,
+    "gmtOffsetName": "UTC+01:00",
+    "abbreviation": "CET",
+    "tzName": "Central European Time"
+  },
+  {
+    "zoneName": "Pacific/Pago_Pago",
+    "gmtOffset": -39600,
+    "gmtOffsetName": "UTC-11:00",
+    "abbreviation": "SST",
+    "tzName": "Samoa Standard Time"
+  },
+  {
+    "zoneName": "Europe/Andorra",
+    "gmtOffset": 3600,
+    "gmtOffsetName": "UTC+01:00",
+    "abbreviation": "CET",
+    "tzName": "Central European Time"
+  },
+  {
+    "zoneName": "Africa/Luanda",
+    "gmtOffset": 3600,
+    "gmtOffsetName": "UTC+01:00",
+    "abbreviation": "WAT",
+    "tzName": "West Africa Time"
+  },
+  {
+    "zoneName": "America/Anguilla",
+    "gmtOffset": -14400,
+    "gmtOffsetName": "UTC-04:00",
+    "abbreviation": "AST",
+    "tzName": "Atlantic Standard Time"
+  },
+  {
+    "zoneName": "Antarctica/Casey",
+    "gmtOffset": 39600,
+    "gmtOffsetName": "UTC+11:00",
+    "abbreviation": "AWST",
+    "tzName": "Australian Western Standard Time"
+  },
+  {
+    "zoneName": "Antarctica/Davis",
+    "gmtOffset": 25200,
+    "gmtOffsetName": "UTC+07:00",
+    "abbreviation": "DAVT",
+    "tzName": "Davis Time"
+  }
+]
