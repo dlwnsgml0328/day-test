@@ -8,7 +8,9 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 
 const TimezoneConverterDayJS = () => {
-  const [selectedTime, setSelectedTime] = useState(dayjs().tz().format('YYYY-MM-DD-Thh:mm')); // Selected time in local timezone
+  const [selectedTime, setSelectedTime] = useState(
+    dayjs().tz().format('YYYY-MM-DDThh:mm').toString()
+  );
   const [currentIdx, setCurrentIdx] = useState<number>(0);
 
   const [selectedTimezone, setSelectedTimezone] = useState<string>(options[currentIdx].value); // Timezone to convert to
@@ -19,36 +21,30 @@ const TimezoneConverterDayJS = () => {
 
   // Handle changes to the selected time
   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    console.log('-- before', event.target.value);
-
-    console.log('-- after:', dayjs(event.target.value).tz().format('YYYY-MM-DD-Thh:mm'));
-
-    setSelectedTime(dayjs(event.target.value).tz().format('YYYY-MM-DD-Thh:mm'));
+    setSelectedTime(dayjs(event.target.value).tz().format('YYYY-MM-DDThh:mm'));
   };
 
   // Handle changes to the selected timezone
   const handleTimezoneChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     const currentIdx = event.target.selectedIndex;
 
-    console.log('-- before: dayjs().tz().format(): ', dayjs().tz().format());
-    console.log('-- options[currentIdx].key', options[currentIdx].key);
-
     dayjs.tz.setDefault(options[currentIdx].key);
 
-    console.log('-- after: dayjs().tz().format(): ', dayjs().tz().format());
-
     setSelectedTimezone(event.target.value);
-    // setSelectedTime(dayjs(event.target.value));
+    setSelectedTime(dayjs().tz().format('YYYY-MM-DDThh:mm'));
     setCurrentIdx(currentIdx);
   };
-
-  // Convert the selected time to the selected timezone
 
   return (
     <div>
       <div>
         <label htmlFor='selected-time'>Selected Time:</label>
-        <input type='datetime-local' id='selected-time' onChange={handleTimeChange} />
+        <input
+          type='datetime-local'
+          id='selected-time'
+          value={selectedTime}
+          onChange={handleTimeChange}
+        />
       </div>
 
       <div>
