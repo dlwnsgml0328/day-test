@@ -12,8 +12,8 @@ const DayJSZone = () => {
 
   dayjs.tz.setDefault('America/New_York');
 
-  console.log('-- after: dayjs().format()', dayjs().format());
-  console.log('-- after: dayjs().tz().format()', dayjs().tz().format());
+  console.log('-- before: dayjs().format()', dayjs().format());
+  console.log('-- before: dayjs().tz().format()', dayjs().tz().format());
 
   return (
     <div>
