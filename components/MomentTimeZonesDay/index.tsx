@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
@@ -10,52 +10,45 @@ dayjs.extend(utc);
 dayjs.extend(timezone);
 dayjs.tz.setDefault(defaultTimezone);
 
-const originTimezone = dayjs().format('YYYY-MM-DDTHH:mm');
-console.log('originTimezone', originTimezone);
+const browserTime = dayjs().format('YYYY-MM-DDTHH:mm');
 
 const TimezoneConverterDayJS = () => {
-  const [selectedTime, setSelectedTime] = useState(dayjs().format('YYYY-MM-DDTHH:mm'));
-  const [selectedTimezone, setSelectedTimezone] = useState<string>(
+  const [time, setTime] = useState(dayjs().format('YYYY-MM-DDTHH:mm'));
+  const [timeZone, setTimeZone] = useState<string>(
     options.find((option) => option.key === defaultTimezone)?.value ?? 'America/New_York'
   );
 
   // Handle changes to the selected time
   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSelectedTime(event.target.value);
+    setTime(event.target.value);
   };
 
   // Handle changes to the selected timezone
   const handleTimezoneChange = useCallback((event: React.ChangeEvent<HTMLSelectElement>) => {
     const currentIdx = event.target.selectedIndex;
-    setSelectedTimezone(event.target.value);
+    setTimeZone(event.target.value);
 
-    const targetTime = dayjs(originTimezone).tz(options[currentIdx].key).format('YYYY-MM-DDTHH:mm');
+    const curTime = dayjs(browserTime).format('YYYY-MM-DDTHH:mm');
+    const targetTime = dayjs(browserTime).tz(options[currentIdx].key).format('YYYY-MM-DDTHH:mm');
 
-    const differenceInHours = dayjs(targetTime).diff(dayjs(originTimezone), 'hour');
+    const differenceInHours = dayjs(targetTime).diff(dayjs(curTime), 'hour');
 
-    console.log('differenceInHours', differenceInHours);
-
-    const timeObj = dayjs(originTimezone).tz(defaultTimezone);
+    const timeObj = dayjs(curTime).tz(defaultTimezone);
     const newTimeObj = timeObj.add(differenceInHours, 'hour');
 
-    setSelectedTime(newTimeObj.format('YYYY-MM-DDTHH:mm'));
+    setTime(newTimeObj.format('YYYY-MM-DDTHH:mm'));
   }, []);
 
   return (
-    <div>
+    <div style={{ padding: '3%' }}>
       <div>
-        <label htmlFor='selected-time'>Selected Time:</label>
-        <input
-          type='datetime-local'
-          id='selected-time'
-          value={selectedTime}
-          onChange={handleTimeChange}
-        />
+        <label htmlFor='selected-time'>Time:</label>
+        <input type='datetime-local' id='selected-time' value={time} onChange={handleTimeChange} />
       </div>
 
-      <div>
-        <label htmlFor='selected-timezone'>Selected Timezone:</label>
-        <select id='selected-timezone' value={selectedTimezone} onChange={handleTimezoneChange}>
+      <div style={{ marginTop: '3%' }}>
+        <label htmlFor='selected-timezone'>Timezone:</label>
+        <select id='selected-timezone' value={timeZone} onChange={handleTimezoneChange}>
           {options.map((option) => (
             <option key={option.key} value={option.value}>
               {option.value}
@@ -68,40 +61,3 @@ const TimezoneConverterDayJS = () => {
 };
 
 export default TimezoneConverterDayJS;
-
-/**
- * const curTime = dayjs(dayjs().tz().format('YYYY-MM-DDTHH:mm'));
-
-    console.log('-- curTime', curTime);
-
-    const utcTime = curTime.utc();
-
-    const target = utcTime.tz(options[currentIdx].key);
-
-    console.log('-- target', target);
-
-    const curHour = curTime.hour();
-    const targetHour = target.hour();
-
-    console.log('-- targetHour', targetHour);
-    console.log('-- curHour', curHour);
-
-    // 전날로 바뀌어 버리면 계산을 어떻게 해야할까요?
-    const differencesInHours = () => {
-      if (targetHour > 12) {
-        return curHour - targetHour;
-      } else {
-        return targetHour - curHour;
-      }
-    };
-
-    console.log('-- differencesInHours', differencesInHours());
-
-    const timeObj = dayjs(selectedTime);
-
-    console.log('-- timeObj', timeObj);
-
-    const newTimeObj = timeObj.add(differencesInHours(), 'hour');
-
-    console.log('-- newTimeObj', newTimeObj.format('YYYY-MM-DDThh:mm'));
- */
