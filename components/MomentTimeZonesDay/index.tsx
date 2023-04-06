@@ -13,11 +13,18 @@ const TimezoneConverterDayJS = () => {
   );
   const [currentIdx, setCurrentIdx] = useState<number>(0);
 
-  const [selectedTimezone, setSelectedTimezone] = useState<string>(options[currentIdx].value); // Timezone to convert to
+  const [selectedTimezone, setSelectedTimezone] = useState<string>(
+    options.find((option) => option.key === Intl.DateTimeFormat().resolvedOptions().timeZone)
+      ?.value ?? 'America/New_York'
+  );
 
   useEffect(() => {
-    console.log('-- selectedTime changed:', selectedTime);
-  }, [selectedTime]);
+    // initialize default timezone
+    dayjs.tz.setDefault(
+      options.find((option) => option.key === Intl.DateTimeFormat().resolvedOptions().timeZone)
+        ?.value ?? 'America/New_York'
+    );
+  }, []);
 
   // Handle changes to the selected time
   const handleTimeChange = (event: React.ChangeEvent<HTMLInputElement>) => {
