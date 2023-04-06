@@ -7,6 +7,8 @@ import options from '../TimeZonesReal/tmz_formatted.json';
 dayjs.extend(utc);
 dayjs.extend(timezone);
 
+const defaultTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
 const TimezoneConverterDayJS = () => {
   const [selectedTime, setSelectedTime] = useState(
     dayjs().tz().format('YYYY-MM-DDThh:mm').toString()
@@ -14,16 +16,12 @@ const TimezoneConverterDayJS = () => {
   const [currentIdx, setCurrentIdx] = useState<number>(0);
 
   const [selectedTimezone, setSelectedTimezone] = useState<string>(
-    options.find((option) => option.key === Intl.DateTimeFormat().resolvedOptions().timeZone)
-      ?.value ?? 'America/New_York'
+    options.find((option) => option.key === defaultTimezone)?.value ?? 'America/New_York'
   );
 
   useEffect(() => {
     // initialize default timezone
-    dayjs.tz.setDefault(
-      options.find((option) => option.key === Intl.DateTimeFormat().resolvedOptions().timeZone)
-        ?.value ?? 'America/New_York'
-    );
+    dayjs.tz.setDefault(defaultTimezone);
   }, []);
 
   // Handle changes to the selected time
